@@ -11,5 +11,20 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
+    target: "server",
+  },
+  vite: {
+    // When VERCEL=1 (set automatically by Vercel), build as a static client-only SPA
+    ...(process.env.VERCEL
+      ? {
+          build: {
+            outDir: "dist/client",
+            rollupOptions: {
+              input: "index.html",
+            },
+          },
+          ssr: undefined,
+        }
+      : {}),
   },
 });
